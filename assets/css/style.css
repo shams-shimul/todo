@@ -1,0 +1,202 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital@0;1&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+}
+
+h1 {
+  font-size: 6rem;
+  font-weight: 500;
+  margin: 1rem 0;
+  text-align: center;
+  color: #ecd3d1;
+}
+
+.container {
+  width: 40%;
+  margin: 0 auto;
+}
+
+table#todolist {
+  width: 100%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1);
+  border-collapse: collapse;
+  position: relative;
+}
+
+table.changed::after {
+  position: absolute;
+  content: '';
+  width: calc(100% - 6px);
+  left: 2px;
+  bottom: -5px;
+  height: 3px;
+  background: white;
+  border: 1px solid lightgray;
+}
+
+table.changed::before {
+  position: absolute;
+  content: '';
+  width: calc(100% - 12px);
+  left: 5px;
+  bottom: -9px;
+  height: 4px;
+  background: white;
+  border: 1px solid lightgray;
+}
+
+table#todolist thead th {
+  padding: 10px 14px;
+  text-align: left;
+}
+
+table#todolist tbody td {
+  position: relative;
+  padding: 10px 15px;
+  border-top: 1px solid #ebeaea;
+  border-bottom: 1px solid #ebeaea;
+}
+
+table#todolist tfoot td {
+  padding: 7px 5px;
+  font-size: small;
+  color: gray;
+  display: flex;
+  border-top: 1px solid lightgray;
+}
+
+table#todolist tfoot td > div:first-child {
+  margin: 0;
+}
+
+table#todolist tfoot td div {
+  flex: 1;
+  padding: 0 5px;
+  margin: 0 5px;
+  border: 1px solid rgb(231, 231, 231, 0);
+  border-radius: 5px;
+  transition-duration: 0.4s;
+}
+
+table#todolist tfoot td>div:last-child {
+  text-align: right;
+  color: red;
+  text-decoration: underline;
+}
+
+table#todolist tfoot td>div:last-child span:hover {
+  cursor: pointer;
+}
+
+table#todolist tfoot td div.status-filter {
+  display: flex;
+}
+
+table#todolist tfoot td div.status-filter div:hover {
+  cursor: pointer;
+  border: 1px solid rgb(231, 231, 231);
+}
+
+table#todolist tfoot td div.status-filter div.active {
+  border: 1px solid lightgray;
+  background: lightgray;
+  color: #303030;
+}
+
+table#todolist th {
+  border-top: none;
+}
+
+table#todolist tbody td label {
+  font-size: 1.2rem;
+  display: inline-block;
+  width: 90%;
+  cursor: pointer;
+}
+
+.done {
+  text-decoration: line-through;
+  color: gray;
+}
+
+#todolist .todolist__main-input-row .fas {
+  font-size: 1.3rem;
+  color: lightgray;
+  transition-duration: 0.3s;
+}
+
+#todolist input.todolist__task {
+  font-family: "Poppins", sans-serif;
+  border: none;
+  outline: none;
+  width: 95%;
+  line-height: 1.3rem;
+  font-size: 1.3rem;
+  padding-left: 5px;
+}
+
+#todolist input.todolist__task::placeholder {
+  font-style: italic;
+  font-size: 1.3rem;
+  color: lightgray;
+}
+
+#todolist td label input[type="checkbox"] {
+  display: none;
+}
+
+#todolist td label i.fas {
+  color: green;
+}
+
+#todolist td label span {
+  display: inline-block;
+  width: 90%;
+  padding-left: 15px;
+  cursor: pointer;
+}
+
+#todolist td label input.edit-item {
+  width: calc(90% - 15px);
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.2rem;
+  color: #303030;
+  margin-left: 10px;
+  padding-left: 5px;
+  border: none;
+  border-bottom: 1px solid darkgray;
+  border-bottom-style: dashed;
+}
+
+#todolist td label input.edit-item:focus {
+  outline: none;
+}
+
+#todolist td label ~ i.fas {
+  position: absolute;
+  right: 10px;
+  color: red;
+  opacity: 0;
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+  transition-duration: 0.3s;
+}
+
+#todolist tr td:hover label ~ i.fas {
+  opacity: 1;
+  display: inline;
+}
+
+#todolist td i {
+  cursor: pointer;
+}
+
+#todolist tbody td label ~ i::before {
+  vertical-align: middle;
+}
