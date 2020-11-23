@@ -24,12 +24,13 @@ h1 {
 
 table#todolist {
   width: 100%;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 40px rgba(0, 0, 0, 0.1);
   border-collapse: collapse;
   position: relative;
+  margin-bottom: 50px;
 }
 
-table.changed::after {
+tfoot.changed::after {
   position: absolute;
   content: '';
   width: calc(100% - 6px);
@@ -40,7 +41,7 @@ table.changed::after {
   border: 1px solid lightgray;
 }
 
-table.changed::before {
+tfoot.changed::before {
   position: absolute;
   content: '';
   width: calc(100% - 12px);
@@ -129,6 +130,41 @@ table#todolist tbody td label {
   font-size: 1.3rem;
   color: lightgray;
   transition-duration: 0.3s;
+}
+
+.tooltip {
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 150px;
+  background-color: black;
+  color: yellow;
+  font-weight: 400;
+  font-size: 1rem;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  left: 110%;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent black transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }
 
 #todolist input.todolist__task {
