@@ -4,8 +4,8 @@ require "../models/main.php";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $item = new todo();
-  $del = $item->delete('items', 'id', [$_POST['id']]);
-  if ($del) {
+  $statusUpdate = $item->update('items', ['status' => $_POST['status']], ['id' => $_POST['id']]);
+  if ($statusUpdate) {
     echo 1;
   }
   else {

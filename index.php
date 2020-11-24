@@ -35,35 +35,60 @@
           <?php
           $anyTodo = $obj->view('*', 'items');
           if ($anyTodo->num_rows > 0) {
+            $anyDone = 0;
             while ($row = $anyTodo->fetch_object()) {
-              echo "
-                <tr>
-                  <td>
-                    <label for='item-{$row->id}'>
-                      <i class='far fa-circle'></i>
-                      <input type='checkbox' name='' id='item-{$row->id}' value='{$row->id}'>
-                      <span>{$row->title}</span>
-                    </label>
-                    <i class='fas fa-times-circle tooltip'><span class='tooltiptext'>Delete this item?<span></i>
-                  </td>
-                </tr>
-              ";
+              if ($row->status == 1) {
+                $anyDone = 1;
+                echo "
+                  <tr class='completed'>
+                    <td>
+                      <label for='item-{$row->id}'>
+                        <i class='fas fa-check-circle'></i>
+                        <input type='checkbox' name='' id='item-{$row->id}' value='{$row->id}'>
+                        <span class='done'>{$row->title}</span>
+                      </label>
+                      <i class='fas fa-times-circle tooltip'><span class='tooltiptext'>Delete this item?<span></i>
+                    </td>
+                  </tr>
+                ";
+              }
+              else {
+                echo "
+                  <tr>
+                    <td>
+                      <label for='item-{$row->id}'>
+                        <i class='far fa-circle'></i>
+                        <input type='checkbox' name='' id='item-{$row->id}' value='{$row->id}'>
+                        <span>{$row->title}</span>
+                      </label>
+                      <i class='fas fa-times-circle tooltip'><span class='tooltiptext'>Delete this item?<span></i>
+                    </td>
+                  </tr>
+                ";
+              }
             }
             echo "
-            <tfoot class='changed'>
-              <tr>
-                <td>
-                  <div>{$anyTodo->num_rows} items left</div>
-                  <div class='status-filter'>
-                    <div class='active' id='none'>All</div>
-                    <div id='pending'>Active</div>
-                    <div id='completed'>Completed</div>
-                  </div>
-                  <div></div>
-                </td>
-              </tr>
-            </tfoot>
-            ";
+              <tfoot>
+                <tr>
+                  <td>
+                    <div>{$anyTodo->num_rows} items left</div>
+                    <div class='status-filter'>
+                      <div class='active' id='none'>All</div>
+                      <div id='pending'>Active</div>
+                      <div id='completed'>Completed</div>
+                    </div>";
+            if ($anyDone) {
+              echo "
+                    <div><span><i class='far fa-trash-alt'></i> Clear completed</span></div>";
+            }
+            else {
+              echo "
+                    <div><span></span></div>";
+            }
+            echo "
+                  </td>
+                </tr>
+              </tfoot>";
           }
           ?>
         </tbody>

@@ -30,7 +30,7 @@ table#todolist {
   margin-bottom: 50px;
 }
 
-tfoot.changed::after {
+tfoot::after {
   position: absolute;
   content: '';
   width: calc(100% - 6px);
@@ -41,7 +41,7 @@ tfoot.changed::after {
   border: 1px solid lightgray;
 }
 
-tfoot.changed::before {
+tfoot::before {
   position: absolute;
   content: '';
   width: calc(100% - 12px);
@@ -88,11 +88,11 @@ table#todolist tfoot td div {
 table#todolist tfoot td>div:last-child {
   text-align: right;
   color: red;
-  text-decoration: underline;
 }
 
 table#todolist tfoot td>div:last-child span:hover {
   cursor: pointer;
+  text-decoration: underline;
 }
 
 table#todolist tfoot td div.status-filter {

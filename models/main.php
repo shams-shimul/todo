@@ -127,21 +127,21 @@ class todo {
    * Method - Delete of CRUD
    *
    * @param string $tablename
-   * @param array $where
+   * @param string $column
+   * @param array $ids
    * @return object
    */
-  public function delete ($tablename, $where) {
-    $whereSql = "";
-    foreach($where as $col => $val) {
-      if ($whereSql == "") {
-        $whereSql .= " WHERE ";
+  public function delete ($tablename, $column, $ids) {
+    $data = "";
+    for($i = 0; $i < count($ids); $i++) {
+      if ($i < (count($ids)-1)) {
+        $data .= $ids[$i] . ', ';
       }
       else {
-        $whereSql .= " AND ";
+        $data .= $ids[$i];
       }
-      $whereSql .= $col . " = '" . $val . "'";
     }
-    $sql = "DELETE FROM {$tablename} {$whereSql}";
+    $sql = "DELETE FROM {$tablename} WHERE {$column} in ({$data})";
     // die($sql);
     $this->db->query($sql);
     if ($this->db->affected_rows > 0) {
