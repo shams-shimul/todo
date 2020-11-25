@@ -7,7 +7,6 @@
  * 4. Marking as DONE or NOT DONE
  * 5. Editing Added Items
  * 6. Filtering Items
- * 7. Styling
  * 8. OBJECTS
  */
 
@@ -26,7 +25,7 @@ jQuery(document).ready(function () {
         leftCount = response[1];
         totalCount = response[0];
         if (totalCount) {
-          jQuery("#todolist thead i").toggleClass("rotated");
+          jQuery("#todolist thead i").addClass("rotated");
         }
       }
     }
@@ -128,6 +127,7 @@ jQuery(document).ready(function () {
     if (jQuery("table#todolist tbody tr").html() == undefined) {
       leftCount = 0;
       totalCount = 0;
+      jQuery("table thead i").removeClass("rotated");
       jQuery("table#todolist tfoot").remove();
     }
   })
@@ -152,6 +152,7 @@ jQuery(document).ready(function () {
             if (jQuery("table#todolist tbody tr").html() == undefined) {
               leftCount = 0;
               totalCount = 0;
+              jQuery("#todolist thead i").removeClass("rotated")
               jQuery("table#todolist tfoot").remove();
             }
             setTimeout(function(){ alert("All completed items deleted."); }, 300);
@@ -327,29 +328,6 @@ jQuery(document).ready(function () {
     }
     else {
       filter.noFilter();
-    }
-  })
-
-  // Styling
-  jQuery("body").on("keypress click", function() {
-      if(totalCount) {
-        jQuery("#todolist .todolist__main-input-row .fas").css(
-          "transform", "rotate(90deg)"
-        )
-      }
-      else {
-        jQuery("#todolist .todolist__main-input-row .fas").css(
-          "transform", "rotate(0deg)"
-        );
-      }
-  })
-
-  jQuery("body").on("click", function () {
-    if(jQuery("table tbody tr").hasClass("completed")) {
-      jQuery("table tfoot td > div:last-child").html("<span><i class='far fa-trash-alt'></i> Clear completed</span>")
-    }
-    else {
-      jQuery("table tfoot td > div:last-child").html("")
     }
   })
   
