@@ -13,8 +13,24 @@
 
 jQuery(document).ready(function () {
 
-  var count = 0;
+  var leftCount = 0;
   var totalCount = 0;
+
+  // Looking for any data available in DB
+  jQuery.ajax({
+    type: "post",
+    url: jQuery("meta[name='url']").attr("content") + "api/read.php",
+    data: {},
+    success: function (response) {
+      if (response) {
+        leftCount = response[1];
+        totalCount = response[0];
+        if (totalCount) {
+          jQuery("#todolist thead i").toggleClass("rotated");
+        }
+      }
+    }
+  });
 
   // Adding Items on Pressing ENTER
   jQuery(".todolist__task").on("keypress", function (event) {
@@ -22,7 +38,7 @@ jQuery(document).ready(function () {
     if (keycode == 13) {
       var item = jQuery(this).val();
       if (item !== '') {
-        count++;
+        leftCount++;
         totalCount++;
 
         jQuery.ajax({
@@ -35,10 +51,10 @@ jQuery(document).ready(function () {
             jQuery("table#todolist tbody").append(`
               <tr>
                 <td>
-                  <label for="item-jQuery{response}">
+                  <label for="item-${response}">
                     <i class="far fa-circle"></i>
-                    <input type="checkbox" name="" id="item-jQuery{response}" value="jQuery{response}">
-                    <span>jQuery{item}</span>
+                    <input type="checkbox" name="" id="item-${response}" value="${response}">
+                    <span>${item}</span>
                   </label>
                   <i class="fas fa-times-circle tooltip"><span class="tooltiptext">Delete this item?<span></i>
                 </td>
@@ -52,7 +68,7 @@ jQuery(document).ready(function () {
             <tfoot>
               <tr>
                 <td>
-                  <div>jQuery{count} items left</div>
+                  <div>${leftCount} items left</div>
                   <div class='status-filter'>
                     <div class="active" id="none">All</div>
                     <div id="pending">Active</div>
@@ -65,7 +81,7 @@ jQuery(document).ready(function () {
           `);
         }
         else {
-          jQuery("table#todolist tfoot tr td > div:first-child").html(`jQuery{count} items left`);
+          jQuery("table#todolist tfoot tr td > div:first-child").html(`${leftCount} items left`);
         }
 
         if (jQuery("table#todolist tfoot div.status-filter div:nth-child(1)").hasClass("active")) {
@@ -107,10 +123,10 @@ jQuery(document).ready(function () {
 
 
       totalCount--;
-      jQuery("table#todolist tfoot tr td > div:first-child").html(`jQuery{--count} items left`);
+      jQuery("table#todolist tfoot tr td > div:first-child").html(`${--leftCount} items left`);
     }
     if (jQuery("table#todolist tbody tr").html() == undefined) {
-      count = 0;
+      leftCount = 0;
       totalCount = 0;
       jQuery("table#todolist tfoot").remove();
     }
@@ -131,28 +147,28 @@ jQuery(document).ready(function () {
           'ids': deleteIds
         },
         success: function (response) {
-          response ? alert("All Completed tasks DELETED!") : "Something went wrong! Try again.";
+          if (response) {
+            jQuery("table tbody tr.completed").remove();
+            if (jQuery("table#todolist tbody tr").html() == undefined) {
+              leftCount = 0;
+              totalCount = 0;
+              jQuery("table#todolist tfoot").remove();
+            }
+            setTimeout(function(){ alert("All completed items deleted."); }, 300);
+          }
+          else {
+            setTimeout(function(){ alert("Couldn't delete! Something went wrong."); }, 300);
+          }
         }
       });
-
-
-      jQuery("table tbody tr.completed").remove();
-      if (jQuery("table#todolist tbody tr").html() == undefined) {
-        count = 0;
-        totalCount = 0;
-        jQuery("table#todolist tfoot").remove();
-      }
-      else {
-        jQuery(this).html("");
-      }
     }
   })
 
   // Marking as DONE or NOT DONE
   jQuery("body").on("click", "table#todolist tbody label i", function () {
     let elem = jQuery(this);
-    let id = jQuery(this).siblings("input").val();
-    if (jQuery(this).hasClass("far fa-circle")) {
+    let id = elem.siblings("input").val();
+    if (elem.hasClass("far fa-circle")) {
       jQuery.ajax({
         type: "post",
         url: jQuery("meta[name=url]").attr("content") + 'api/update-status.php',
@@ -162,13 +178,13 @@ jQuery(document).ready(function () {
         },
         success: function (response) {
           if (response) {
-            jQuery(elem).removeClass("far fa-circle ").addClass("fas fa-check-circle");
-            jQuery("table#todolist tfoot tr td > div:first-child").html(`${--count} items left`);
+            elem.removeClass("far fa-circle ").addClass("fas fa-check-circle");
+            jQuery("table#todolist tfoot tr td > div:first-child").html(`${--leftCount} items left`);
           }
         }
       });
     }
-    else if (jQuery(this).hasClass("fas fa-check-circle")) {
+    else if (elem.hasClass("fas fa-check-circle")) {
       jQuery.ajax({
         type: "post",
         url: jQuery("meta[name=url]").attr("content") + 'api/update-status.php',
@@ -178,21 +194,17 @@ jQuery(document).ready(function () {
         },
         success: function (response) {
           if (response) {
-            jQuery(elem).removeClass("fas fa-check-circle").addClass("far fa-circle");
-            jQuery("table#todolist tfoot tr td > div:first-child").html(`jQuery{++count} items left`);
+            elem.removeClass("fas fa-check-circle").addClass("far fa-circle");
+            jQuery("table#todolist tfoot tr td > div:first-child").html(`${++leftCount} items left`);
           }
         }
       });
     }
-
-    jQuery(this).nextAll("span").toggleClass("done");
-
-    jQuery(this).parents("tr").toggleClass("completed");
-
+    elem.nextAll("span").toggleClass("done");
+    elem.parents("tr").toggleClass("completed");
     
-    if ((jQuery("table#todolist tfoot div.status-filter div:first-child").hasClass("active"))) {}
-    else {
-      let status = jQuery(this).parents("tr").attr("class");
+    if (!(jQuery("table#todolist tfoot div.status-filter div:first-child").hasClass("active"))) {
+      let status = elem.parents("tr").attr("class");
       if (status == "completed") {
         filter.filterPending();
       }
@@ -202,21 +214,45 @@ jQuery(document).ready(function () {
     }
   })
   jQuery("body").on("click", "table#todolist tbody label span", function () {
-    jQuery(this).toggleClass("done");
-    if (jQuery(this).siblings("i").hasClass("far fa-circle")) {
-      jQuery(this).siblings("i").removeClass("far fa-circle ").addClass("fas fa-check-circle");
-      jQuery("table#todolist tfoot tr td > div:first-child").html(`${--count} items left`);
+    let elem = jQuery(this);
+    let id = elem.siblings("input").val();
+    elem.toggleClass("done");
+    if (elem.siblings("i").hasClass("far fa-circle")) {
+      jQuery.ajax({
+        type: "post",
+        url: jQuery("meta[name=url]").attr("content") + 'api/update-status.php',
+        data: {
+          'id' : id,
+          'status' : 1
+        },
+        success: function (response) {
+          if (response) {
+            elem.siblings("i").removeClass("far fa-circle ").addClass("fas fa-check-circle");
+            jQuery("table#todolist tfoot tr td > div:first-child").html(`${--leftCount} items left`);
+          }
+        }
+      });
     }
-    else if (jQuery(this).siblings("i").hasClass("fas fa-check-circle")) {
-      jQuery(this).siblings("i").removeClass("fas fa-check-circle ").addClass("far fa-circle");
-      jQuery("table#todolist tfoot tr td > div:first-child").html(`jQuery{++count} items left`);
+    else if (elem.siblings("i").hasClass("fas fa-check-circle")) {
+      jQuery.ajax({
+        type: "post",
+        url: jQuery("meta[name=url]").attr("content") + 'api/update-status.php',
+        data: {
+          'id' : id,
+          'status' : 0
+        },
+        success: function (response) {
+          if (response) {
+            elem.siblings("i").removeClass("fas fa-check-circle ").addClass("far fa-circle");
+            jQuery("table#todolist tfoot tr td > div:first-child").html(`${++leftCount} items left`);
+          }
+        }
+      });
     }
-
-    jQuery(this).parents("tr").toggleClass("completed");
+    elem.parents("tr").toggleClass("completed");
     
-    if ((jQuery("table#todolist tfoot div.status-filter div:first-child").hasClass("active"))) {}
-    else {
-      let status = jQuery(this).parents("tr").attr("class");
+    if (!(jQuery("table#todolist tfoot div.status-filter div:first-child").hasClass("active"))) {
+      let status = elem.parents("tr").attr("class");
       if (status == "completed") {
         filter.filterPending();
       }
@@ -230,7 +266,7 @@ jQuery(document).ready(function () {
   jQuery("body").on("dblclick", "table#todolist tbody label span", function () {
     var value = jQuery(this).html();
     jQuery(this).parent("label").append(`
-      <input type='text' name='' class='edit-item' value='jQuery{value}' />
+      <input type='text' name='' class='edit-item' value='${value}' />
     `);
     jQuery(this).remove();
   });
@@ -242,12 +278,12 @@ jQuery(document).ready(function () {
         var id = jQuery(this).siblings("input").val();
         if (jQuery(this).siblings("i").hasClass("fas fa-check-circle")) {
           jQuery(this).parent("label").append(`
-            <span class="done">jQuery{value}</span>
+            <span class="done">${value}</span>
           `);
         }
         else {
           jQuery(this).parent("label").append(`
-            <span>jQuery{value}</span>
+            <span>${value}</span>
           `);
         }
         jQuery(this).remove();
@@ -295,17 +331,17 @@ jQuery(document).ready(function () {
   })
 
   // Styling
-  jQuery("body").on("keypress click",  function() {
-    if(totalCount) {
-      jQuery("#todolist .todolist__main-input-row .fas").css(
-        "transform", "rotate(90deg)"
-      )
-    }
-    else {
-      jQuery("#todolist .todolist__main-input-row .fas").css(
-        "transform", "rotate(0deg)"
-      );
-    }
+  jQuery("body").on("keypress click", function(event) {
+      if(totalCount) {
+        jQuery("#todolist .todolist__main-input-row .fas").css(
+          "transform", "rotate(90deg)"
+        )
+      }
+      else {
+        jQuery("#todolist .todolist__main-input-row .fas").css(
+          "transform", "rotate(0deg)"
+        );
+      }
   })
 
   jQuery("body").on("click", function () {
@@ -357,5 +393,4 @@ jQuery(document).ready(function () {
       }
     }
   }
-  
 })

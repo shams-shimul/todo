@@ -167,6 +167,10 @@ table#todolist tbody td label {
   visibility: visible;
 }
 
+#todolist thead i.rotated {
+  transform: rotate(90deg);
+}
+
 #todolist input.todolist__task {
   font-family: "Poppins", sans-serif;
   border: none;

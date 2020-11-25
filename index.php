@@ -35,10 +35,11 @@
           <?php
           $anyTodo = $obj->view('*', 'items');
           if ($anyTodo->num_rows > 0) {
-            $anyDone = 0;
+            $done = 0;
+            $notDone = 0;
             while ($row = $anyTodo->fetch_object()) {
               if ($row->status == 1) {
-                $anyDone = 1;
+                $done++;
                 echo "
                   <tr class='completed'>
                     <td>
@@ -53,6 +54,7 @@
                 ";
               }
               else {
+                $notDone++;
                 echo "
                   <tr>
                     <td>
@@ -71,13 +73,13 @@
               <tfoot>
                 <tr>
                   <td>
-                    <div>{$anyTodo->num_rows} items left</div>
+                    <div>{$notDone} items left</div>
                     <div class='status-filter'>
                       <div class='active' id='none'>All</div>
                       <div id='pending'>Active</div>
                       <div id='completed'>Completed</div>
                     </div>";
-            if ($anyDone) {
+            if ($done) {
               echo "
                     <div><span><i class='far fa-trash-alt'></i> Clear completed</span></div>";
             }
