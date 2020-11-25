@@ -331,7 +331,7 @@ jQuery(document).ready(function () {
   })
 
   // Styling
-  jQuery("body").on("keypress click", function(event) {
+  jQuery("body").on("keypress click", function() {
       if(totalCount) {
         jQuery("#todolist .todolist__main-input-row .fas").css(
           "transform", "rotate(90deg)"
