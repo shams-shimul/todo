@@ -273,7 +273,7 @@ jQuery(document).ready(function () {
       else {
         $("table tfoot td > div:last-child").html("")
       }
-    }, 100)
+    }, 50)
   })
 
   // Editing Added Items
