@@ -1,6 +1,8 @@
 <?php
 
-class todo {
+namespace AppTodo;
+
+class Todo {
 
   /**
    * Property variables
@@ -13,7 +15,7 @@ class todo {
    * Constructor
    */
   public function __construct() {
-    $this->db = new mysqli('localhost', 'root', '', 'todo');
+    $this->db = new \mysqli('localhost', 'root', '', 'todo');
   }
 
 

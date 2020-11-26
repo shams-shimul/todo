@@ -1,9 +1,9 @@
 <?php
 
-require "../models/main.php";
+require_once "../vendor/autoload.php";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $item = new todo();
+  $item = new AppTodo\Todo();
   $del = $item->delete('items', 'id', $_POST['ids']);
   if ($del) {
     echo 1;

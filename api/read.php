@@ -1,10 +1,10 @@
 <?php
 
-require "../models/main.php";
+require_once "../vendor/autoload.php";
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $item = new todo();
+  $item = new AppTodo\Todo();
   $allStatus = [];
 
   $read = $item->view('*', 'items');

@@ -262,6 +262,14 @@ jQuery(document).ready(function () {
       }
     }
   })
+  $("body").on("click", function () {
+    if($("table tbody tr").hasClass("completed")) {
+      $("table tfoot td > div:last-child").html("<span><i class='far fa-trash-alt'></i> Clear completed</span>")
+    }
+    else {
+      $("table tfoot td > div:last-child").html("")
+    }
+  })
 
   // Editing Added Items
   jQuery("body").on("dblclick", "table#todolist tbody label span", function () {

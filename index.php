@@ -1,6 +1,6 @@
 <?php
-  require "./models/main.php";
-  $obj = new todo();
+  require_once "./vendor/autoload.php";
+  $obj = new AppTodo\Todo();
 ?>
 
 <!DOCTYPE html>

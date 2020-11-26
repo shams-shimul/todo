@@ -210,8 +210,8 @@ table#todolist tbody td label {
   margin-left: 10px;
   padding-left: 5px;
   border: none;
-  border-bottom: 1px solid darkgray;
-  border-bottom-style: dashed;
+  border: 1px dashed darkgray;
+  border-radius: 5px;
 }
 
 #todolist td label input.edit-item:focus {
