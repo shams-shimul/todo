@@ -219,8 +219,8 @@ jQuery(document).ready(function () {
   jQuery("body").on("click", "table#todolist tbody label span", function () {
     let elem = jQuery(this);
     let id = elem.siblings("input").val();
-    // timer = setTimeout(singleClick, 150);
-    // function singleClick() {
+    timer = setTimeout(singleClick, 150);
+    function singleClick() {
       elem.toggleClass("done");
       if (elem.siblings("i").hasClass("far fa-circle")) {
         jQuery.ajax({
@@ -265,7 +265,7 @@ jQuery(document).ready(function () {
           filter.filterDone();
         }
       }
-    // }
+    }
   })
   $("body").on("click", function () {
     setTimeout(function() {
@@ -275,14 +275,13 @@ jQuery(document).ready(function () {
       else {
         $("table tfoot td > div:last-child").html("")
       }
-    }, 100)
+    }, 200)
   })
 
   // Editing Added Items
   $("body").on("dblclick", "table#todolist tbody label span", function () {
-    // clearTimeout(timer);
+    clearTimeout(timer);
     let value = $(this).html();
-    let id = $(this).siblings("input").val()
     $(this).parent("label").append(`
       <input type='text' name='' class='edit-item' value='${value}' data-initial='${value}' />
     `);
