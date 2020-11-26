@@ -217,102 +217,127 @@ jQuery(document).ready(function () {
   jQuery("body").on("click", "table#todolist tbody label span", function () {
     let elem = jQuery(this);
     let id = elem.siblings("input").val();
-    elem.toggleClass("done");
-    if (elem.siblings("i").hasClass("far fa-circle")) {
-      jQuery.ajax({
-        type: "post",
-        url: jQuery("meta[name=url]").attr("content") + 'api/update-status.php',
-        data: {
-          'id' : id,
-          'status' : 1
-        },
-        success: function (response) {
-          if (response) {
-            elem.siblings("i").removeClass("far fa-circle ").addClass("fas fa-check-circle");
-            jQuery("table#todolist tfoot tr td > div:first-child").html(`${--leftCount} items left`);
-          }
-        }
-      });
-    }
-    else if (elem.siblings("i").hasClass("fas fa-check-circle")) {
-      jQuery.ajax({
-        type: "post",
-        url: jQuery("meta[name=url]").attr("content") + 'api/update-status.php',
-        data: {
-          'id' : id,
-          'status' : 0
-        },
-        success: function (response) {
-          if (response) {
-            elem.siblings("i").removeClass("fas fa-check-circle ").addClass("far fa-circle");
-            jQuery("table#todolist tfoot tr td > div:first-child").html(`${++leftCount} items left`);
-          }
-        }
-      });
-    }
-    elem.parents("tr").toggleClass("completed");
-    
-    if (!(jQuery("table#todolist tfoot div.status-filter div:first-child").hasClass("active"))) {
-      let status = elem.parents("tr").attr("class");
-      if (status == "completed") {
-        filter.filterPending();
-      }
-      else {
-        filter.filterDone();
-      }
-    }
-  })
-  $("body").on("click", function () {
-    if($("table tbody tr").hasClass("completed")) {
-      $("table tfoot td > div:last-child").html("<span><i class='far fa-trash-alt'></i> Clear completed</span>")
-    }
-    else {
-      $("table tfoot td > div:last-child").html("")
-    }
-  })
-
-  // Editing Added Items
-  jQuery("body").on("dblclick", "table#todolist tbody label span", function () {
-    var value = jQuery(this).html();
-    jQuery(this).parent("label").append(`
-      <input type='text' name='' class='edit-item' value='${value}' />
-    `);
-    jQuery(this).remove();
-  });
-  jQuery("body").on("keypress", "table#todolist tbody label input.edit-item", function (event) {
-    var keycode = event.keyCode ? event.keyCode : event.which;
-    if (keycode == 13) {
-      value = jQuery(this).val();
-      if (value != '') {
-        var id = jQuery(this).siblings("input").val();
-        if (jQuery(this).siblings("i").hasClass("fas fa-check-circle")) {
-          jQuery(this).parent("label").append(`
-            <span class="done">${value}</span>
-          `);
-        }
-        else {
-          jQuery(this).parent("label").append(`
-            <span>${value}</span>
-          `);
-        }
-        jQuery(this).remove();
-
+    // timer = setTimeout(singleClick, 150);
+    // function singleClick() {
+      elem.toggleClass("done");
+      if (elem.siblings("i").hasClass("far fa-circle")) {
         jQuery.ajax({
-          type: 'post',
-          url: jQuery("meta[name='url']").attr("content") + 'api/update.php',
+          type: "post",
+          url: jQuery("meta[name=url]").attr("content") + 'api/update-status.php',
           data: {
-            'id': id,
-            'title': value
+            'id' : id,
+            'status' : 1
           },
-          success: function(response) {
+          success: function (response) {
             if (response) {
-              alert("Successfully updated.");
-            }
-            else {
-              alert("Couldn't update, something went wrong. Try again.")
+              elem.siblings("i").removeClass("far fa-circle ").addClass("fas fa-check-circle");
+              jQuery("table#todolist tfoot tr td > div:first-child").html(`${--leftCount} items left`);
             }
           }
         });
+      }
+      else if (elem.siblings("i").hasClass("fas fa-check-circle")) {
+        jQuery.ajax({
+          type: "post",
+          url: jQuery("meta[name=url]").attr("content") + 'api/update-status.php',
+          data: {
+            'id' : id,
+            'status' : 0
+          },
+          success: function (response) {
+            if (response) {
+              elem.siblings("i").removeClass("fas fa-check-circle ").addClass("far fa-circle");
+              jQuery("table#todolist tfoot tr td > div:first-child").html(`${++leftCount} items left`);
+            }
+          }
+        });
+      }
+      elem.parents("tr").toggleClass("completed");
+      
+      if (!(jQuery("table#todolist tfoot div.status-filter div:first-child").hasClass("active"))) {
+        let status = elem.parents("tr").attr("class");
+        if (status == "completed") {
+          filter.filterPending();
+        }
+        else {
+          filter.filterDone();
+        }
+      }
+    // }
+  })
+  $("body").on("click", function () {
+    setTimeout(function() {
+      if (totalCount > leftCount) {
+        $("table tfoot td > div:last-child").html("<span><i class='far fa-trash-alt'></i> Clear completed</span>")
+      }
+      else {
+        $("table tfoot td > div:last-child").html("")
+      }
+    }, 100)
+  })
+
+  // Editing Added Items
+  $("body").on("dblclick", "table#todolist tbody label span", function () {
+    // clearTimeout(timer);
+    let value = $(this).html();
+    let id = $(this).siblings("input").val()
+    $(this).parent("label").append(`
+      <input type='text' name='' class='edit-item' value='${value}' data-initial='${value}' />
+    `);
+    $(this).remove();
+  })
+  jQuery("body").on("keypress", "input.edit-item", function (event) {
+    let keycode = event.keyCode ? event.keyCode : event.which;
+    if (keycode == 13) {
+      let value = jQuery(this).val();
+      let valueInit = jQuery(this).attr("data-initial");
+      if (value != '') {
+        if (value != valueInit) {
+          let elem = jQuery(this);
+          var id = elem.siblings("input").val();
+          jQuery.ajax({
+            type: 'post',
+            url: jQuery("meta[name='url']").attr("content") + 'api/update.php',
+            data: {
+              'id': id,
+              'title': value
+            },
+            success: function(response) {
+              if (response) {
+                if (elem.siblings("i").hasClass("fas fa-check-circle")) {
+                  elem.parent("label").append(`
+                    <span class="done">${value}</span>
+                  `);
+                }
+                else {
+                  elem.parent("label").append(`
+                    <span>${value}</span>
+                  `);
+                }
+                elem.remove();
+                // setTimeout(function() {
+                //   alert("Successfully updated.");
+                // }, 100)
+              }
+              else {
+                alert("Couldn't update, something went wrong. Try again.")
+              }
+            }
+          });
+        }
+        else {
+          if (jQuery(this).siblings("i").hasClass("fas fa-check-circle")) {
+            jQuery(this).parent("label").append(`
+              <span class="done">${value}</span>
+            `);
+          }
+          else {
+            jQuery(this).parent("label").append(`
+              <span>${value}</span>
+            `);
+          }
+          jQuery(this).remove();
+        }
       }
       else {
         alert("Sorry! Can't save empty value.");
