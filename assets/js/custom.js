@@ -62,6 +62,7 @@ jQuery(document).ready(function () {
           }
         });
         jQuery(this).val("");
+        jQuery("table thead i").addClass("rotated");
         if (jQuery("table#todolist tfoot").html() == undefined) {
           jQuery("table#todolist").append(`
             <tfoot>
@@ -103,7 +104,7 @@ jQuery(document).ready(function () {
   jQuery("body").on("click", "i.fa-times-circle", function () {
     if (confirm("Are you sure?")) {
       let id = jQuery(this).siblings("label").children("input").val();
-      jQuery(this).parents("tr").remove();
+      let elem = jQuery(this);
       jQuery.ajax({
         type: "post",
         url: jQuery("meta[name='url']").attr("content") + 'api/delete.php',
@@ -112,6 +113,10 @@ jQuery(document).ready(function () {
         },
         success: function (response) {
           if (response) {
+            if (!(elem.parents("tr").hasClass("completed"))) {
+              jQuery("table#todolist tfoot tr td > div:first-child").html(`${--leftCount} items left`);
+            }
+            elem.parents("tr").remove();
             alert("Deleted successfully");
           }
           else {
@@ -119,10 +124,7 @@ jQuery(document).ready(function () {
           }
         }
       });
-
-
       totalCount--;
-      jQuery("table#todolist tfoot tr td > div:first-child").html(`${--leftCount} items left`);
     }
     if (jQuery("table#todolist tbody tr").html() == undefined) {
       leftCount = 0;
@@ -273,7 +275,7 @@ jQuery(document).ready(function () {
       else {
         $("table tfoot td > div:last-child").html("")
       }
-    }, 50)
+    }, 100)
   })
 
   // Editing Added Items
