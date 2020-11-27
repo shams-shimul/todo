@@ -95,6 +95,7 @@
           ?>
         </tbody>
       </table>
+      <p class="info"></p>
   </div>
 
   <!-- Scripts -->

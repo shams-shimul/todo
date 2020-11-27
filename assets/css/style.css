@@ -244,3 +244,15 @@ table#todolist tbody td label {
 #todolist tbody td label ~ i::before {
   vertical-align: middle;
 }
+
+p.info {
+  text-align: center;
+  font-size: small;
+  color: gray;
+  transition-duration: 300ms;
+}
+
+p.info:hover {
+  cursor: default;
+  color: #303030;
+}

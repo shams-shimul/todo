@@ -26,6 +26,9 @@ jQuery(document).ready(function () {
         totalCount = response[0];
         if (totalCount) {
           jQuery("#todolist thead i").addClass("rotated");
+          jQuery("p.info").html(`
+          <i class="fas fa-info-circle"></i> To edit an item, <b>DOUBLE-CLICK</b> on it and after changing it's value, hit <b>ENTER</b>
+          `);
         }
       }
     }
@@ -39,7 +42,6 @@ jQuery(document).ready(function () {
       if (item !== '') {
         leftCount++;
         totalCount++;
-
         jQuery.ajax({
           type: 'post',
           url: jQuery("meta[name='url']").attr("content") + 'api/create.php',
@@ -63,6 +65,11 @@ jQuery(document).ready(function () {
         });
         jQuery(this).val("");
         jQuery("table thead i").addClass("rotated");
+        if (totalCount == 1) {
+          jQuery("p.info").html(`
+          <i class="fas fa-info-circle"></i> To edit an item, <b>DOUBLE-CLICK</b> on it and after changing it's value, hit <b>ENTER</b>
+        `);
+        }
         if (jQuery("table#todolist tfoot").html() == undefined) {
           jQuery("table#todolist").append(`
             <tfoot>
@@ -117,7 +124,9 @@ jQuery(document).ready(function () {
               jQuery("table#todolist tfoot tr td > div:first-child").html(`${--leftCount} items left`);
             }
             elem.parents("tr").remove();
-            alert("Deleted successfully");
+            setTimeout(() => {
+              alert("Deleted successfully");
+            }, 200);
           }
           else {
             alert("Aw snap! Something went wrong, try again.");
@@ -126,11 +135,11 @@ jQuery(document).ready(function () {
       });
       totalCount--;
     }
-    if (jQuery("table#todolist tbody tr").html() == undefined) {
+    if (totalCount == 0) {
       leftCount = 0;
-      totalCount = 0;
       jQuery("table thead i").removeClass("rotated");
       jQuery("table#todolist tfoot").remove();
+      jQuery("p.info").html('');
     }
   })
 
