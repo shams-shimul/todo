@@ -223,6 +223,8 @@ table#todolist tbody td label {
 #todolist td label ~ i.fas {
   position: absolute;
   right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   color: red;
   opacity: 0;
   font-size: 1.5rem;

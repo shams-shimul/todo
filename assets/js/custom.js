@@ -324,9 +324,9 @@ jQuery(document).ready(function () {
                   `);
                 }
                 elem.remove();
-                // setTimeout(function() {
-                //   alert("Successfully updated.");
-                // }, 100)
+                setTimeout(function() {
+                  alert("Successfully updated.");
+                }, 100)
               }
               else {
                 alert("Couldn't update, something went wrong. Try again.")
