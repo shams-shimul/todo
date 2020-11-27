@@ -290,10 +290,26 @@ jQuery(document).ready(function () {
   $("body").on("dblclick", "table#todolist tbody label span", function () {
     clearTimeout(timer);
     let value = $(this).html();
+    let id = $(this).siblings("input").val();
+    let elem = 'input#' + id;
     $(this).parent("label").append(`
-      <input type='text' name='' class='edit-item' value='${value}' data-initial='${value}' />
+      <input type='text' name='' class='edit-item' id='${id}' value='${value}' data-initial='${value}' />
     `);
+    $(elem).focus().select();
     $(this).remove();
+    $(elem).on("blur", function() {
+      if (jQuery(this).siblings("i").hasClass("fas fa-check-circle")) {
+        jQuery(this).parent("label").append(`
+          <span class="done">${value}</span>
+        `);
+      }
+      else {
+        jQuery(this).parent("label").append(`
+          <span>${value}</span>
+        `);
+      }
+      jQuery(this).remove();
+    });
   })
   jQuery("body").on("keypress", "input.edit-item", function (event) {
     let keycode = event.keyCode ? event.keyCode : event.which;
