@@ -209,10 +209,14 @@ jQuery(document).ready(function () {
     if (!(jQuery("table#todolist tfoot div.status-filter div:first-child").hasClass("active"))) {
       let status = elem.parents("tr").attr("class");
       if (status == "completed") {
-        filter.filterPending();
+        setTimeout(() => {
+          filter.filterPending();
+        }, 500);
       }
       else {
-        filter.filterDone();
+        setTimeout(() => {
+          filter.filterDone();
+        }, 500);
       }
     }
   })
@@ -259,10 +263,14 @@ jQuery(document).ready(function () {
       if (!(jQuery("table#todolist tfoot div.status-filter div:first-child").hasClass("active"))) {
         let status = elem.parents("tr").attr("class");
         if (status == "completed") {
-          filter.filterPending();
+          setTimeout(() => {
+            filter.filterPending();
+          }, 500);
         }
         else {
-          filter.filterDone();
+          setTimeout(() => {
+            filter.filterDone();
+          }, 500);
         }
       }
     }
@@ -377,7 +385,7 @@ jQuery(document).ready(function () {
       if (jQuery("table#todolist tbody tr").not(".completed").length == totalCount) {
         jQuery("table#todolist tbody").append(`
           <tr class="nothing">
-            <td>Go go go! Lots of work to do!</td>
+            <td>Go go go! Lots of work left to do!</td>
           </tr>
         `)
       }
