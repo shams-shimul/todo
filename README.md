@@ -12,7 +12,7 @@ A simple, yet feature-reach, intuitive to-do application developed with PHP OOP,
 - Real-time counting of active items
 - Confirmation alerts on update/delete
 - Comes with database CRUD functionalities meaning nothing is lost with closing of the app
-- Minimal, clean, interactive, responsive UI
+- Minimal, clean, interactive UI
 
 ## Live
 Watch the app live in action here: http://todo.procoder.xyz
